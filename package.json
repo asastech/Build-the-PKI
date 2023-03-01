@@ -1,0 +1,116 @@
+{
+	"name": "api",
+	"version": "1.0.0",
+	"description": "Fastify API Template. Written in TypeScript.",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc",
+		"start": "node dist/lib",
+		"dev": "tsc-watch --onSuccess 'node dist/index.js'",
+		"test": "jest --verbose --runInBand --detectOpenHandles",
+		"test:ci": "jest --ci --coverage --no-cache --verbose --detectOpenHandles --forceExit",
+		"coverage": "jest --coverage --no-cache --verbose --runInBand --detectOpenHandles",
+		"lint": "eslint --ext .ts,.js . --ignore-path .gitignore",
+		"fix": "eslint --ext .ts,.js . --ignore-path .gitignore --fix",
+		"lint-staged": "lint-staged",
+		"postinstall": "husky install"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/phr3nzy/api-template.git"
+	},
+	"keywords": [
+		"api-template",
+		"fastify",
+		"typescript"
+	],
+	"author": "phr3nzy",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/phr3nzy/api-template/issues"
+	},
+	"homepage": "https://github.com/phr3nzy/api-template#readme",
+	"dependencies": {
+		"@fastify/cookie": "^7.0.0",
+		"@fastify/env": "^4.0.0",
+		"@fastify/helmet": "^9.1.0",
+		"@fastify/rate-limit": "^7.0.0",
+		"@fastify/request-context": "^4.0.0",
+		"@fastify/sensible": "^5.0.0",
+		"@fastify/static": "^6.4.0",
+		"@fastify/swagger": "^7.4.1",
+		"@fastify/under-pressure": "^7.0.0",
+		"ajv": "^8.11.0",
+		"ajv-errors": "^3.0.0",
+		"ajv-formats": "^2.1.1",
+		"argon2": "^0.28.5",
+		"axios": "^0.27.2",
+		"env-cmd": "^10.1.0",
+		"fastify": "^4.0.0",
+		"fastify-plugin": "^3.0.1",
+		"ioredis": "^5.0.6",
+		"jsonwebtoken": "^8.5.1",
+		"knex": "^2.1.0",
+		"make-promises-safe": "^5.1.0",
+		"objection": "^3.0.1",
+		"objection-db-errors": "^1.1.2",
+		"parse-redis-url-simple": "^1.0.2",
+		"pg": "^8.7.3",
+		"pino": "^8.0.0",
+		"qs": "^6.10.5",
+		"uuid": "^8.3.2"
+	},
+	"devDependencies": {
+		"@types/ioredis": "^4.28.10",
+		"@types/jest": "^28.1.3",
+		"@types/jsonwebtoken": "^8.5.8",
+		"@types/node": "^17.0.41",
+		"@types/qs": "^6.9.7",
+		"@types/uuid": "^8.3.4",
+		"@typescript-eslint/eslint-plugin": "^5.27.1",
+		"@typescript-eslint/parser": "^5.27.1",
+		"eslint": "^8.17.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-prettier": "^4.0.0",
+		"eslint-plugin-security": "^1.5.0",
+		"husky": "^8.0.1",
+		"jest": "^28.1.1",
+		"lint-staged": "^13.0.1",
+		"pino-pretty": "^8.0.0",
+		"prettier": "^2.6.2",
+		"ts-jest": "^28.0.4",
+		"ts-node": "^10.8.1",
+		"ts-watch": "^1.0.8",
+		"tsc-watch": "^5.0.3",
+		"typescript": "^4.7.3"
+	},
+	"lint-staged": {
+		"*.{js,ts,json,md,yml,yaml}": [
+			"prettier --write"
+		]
+	},
+	"jest": {
+		"verbose": true,
+		"preset": "ts-jest",
+		"testEnvironment": "node",
+		"testPathIgnorePatterns": [
+			"node_modules",
+			"tests/config/*"
+		],
+		"transform": {
+			"^.+\\.tsx?$": "ts-jest"
+		},
+		"testRegex": [
+			"/tests?/[a-zA-Z0-9]{0,}\\.(test|spec)\\.(js|ts)[\\s]?",
+			"/tests?/.*/[a-zA-Z0-9]{0,}\\.(test|spec)\\.(js|ts)[\\s]?"
+		],
+		"moduleFileExtensions": [
+			"ts",
+			"tsx",
+			"js",
+			"jsx",
+			"json",
+			"node"
+		]
+	}
+}

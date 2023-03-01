@@ -1,0 +1,76 @@
+{
+	"schema": {
+		"tags": ["Certificate"],
+		"description": "Revokes and Deletes a Certificate.",
+		"params": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["certificateId"],
+			"properties": {
+				"certificateId": {
+					"type": "string",
+					"format": "uuid"
+				}
+			},
+			"errorMessage": {
+				"type": "invalid payload: not in the desired format",
+				"properties": {
+					"certificateId": "must be a valid UUID string"
+				},
+				"required": {
+					"certificateId": "certificateId is a required property"
+				},
+				"additionalProperties": "invalid payload: extra fields found"
+			}
+		},
+		"response": {
+			"200": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"description": "Indicates the state of the performed operation. Could return `false` if the request succeeded, but failed while attempting to do other operations."
+					},
+					"message": {
+						"type": "string",
+						"description": "Returns some information on the state of the performed operation."
+					}
+				}
+			},
+			"4xx": {
+				"type": "object",
+				"properties": {
+					"error": {
+						"type": "string",
+						"default": "Bad Request"
+					},
+					"message": {
+						"type": "string",
+						"default": "Invalid input, auth, parameters etc."
+					},
+					"statusCode": {
+						"type": "integer",
+						"default": 400
+					}
+				}
+			},
+			"5xx": {
+				"type": "object",
+				"properties": {
+					"error": {
+						"type": "string",
+						"default": "Internal Server Error"
+					},
+					"message": {
+						"type": "string",
+						"default": "Something went wrong."
+					},
+					"statusCode": {
+						"type": "integer",
+						"default": 500
+					}
+				}
+			}
+		}
+	}
+}

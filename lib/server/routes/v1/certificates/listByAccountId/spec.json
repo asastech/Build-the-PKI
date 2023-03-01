@@ -1,0 +1,170 @@
+{
+	"schema": {
+		"tags": ["Certificate"],
+		"description": "Lists Certificates using the Account's ID.",
+		"params": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["accountId"],
+			"properties": {
+				"accountId": {
+					"type": "string",
+					"format": "uuid"
+				}
+			},
+			"errorMessage": {
+				"type": "invalid payload: not in the desired format",
+				"properties": {
+					"accountId": "must be a valid UUID string"
+				},
+				"required": {
+					"accountId": "accountId is a required property"
+				},
+				"additionalProperties": "invalid payload: extra fields found"
+			}
+		},
+		"querystring": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"limit": {
+					"type": "integer",
+					"minimum": 1,
+					"default": 10
+				},
+				"offset": {
+					"type": "integer",
+					"minimum": 0,
+					"default": 0
+				},
+				"field": {
+					"type": "string",
+					"enum": ["createdAt", "updatedAt", "expiresAt", "deletedAt"],
+					"default": "createdAt"
+				},
+				"direction": {
+					"type": "string",
+					"enum": ["asc", "desc"],
+					"default": "desc"
+				}
+			},
+			"errorMessage": {
+				"type": "invalid payload: not in the desired format",
+				"properties": {
+					"limit": "must be an integer more than or equal 1",
+					"offset": "must be an integer more than or equal 0",
+					"field": "must be one of the following values: createdAt, updatedAt, expiresAt, deletedAt",
+					"direction": "must be one of the following values: asc, desc"
+				},
+				"additionalProperties": "invalid payload: extra fields found"
+			}
+		},
+		"response": {
+			"200": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"description": "Indicates the state of the performed operation. Could return `false` if the request succeeded, but failed while attempting to do other operations."
+					},
+					"message": {
+						"type": "string",
+						"description": "Returns some information on the state of the performed operation."
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"certificates": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"accountId": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"description": {
+											"type": "string"
+										},
+										"commonName": {
+											"type": "string"
+										},
+										"serialNumber": {
+											"type": "string"
+										},
+										"status": {
+											"type": "string",
+											"enum": ["ISSUED", "REVOKED", "EXPIRED", "DELETED"]
+										},
+										"deletedBy": {
+											"type": "string",
+											"enum": ["USER", "SYSTEM", "ADMIN"]
+										},
+										"deletedById": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"expiresAt": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"updatedAt": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"createdAt": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"deletedAt": {
+											"type": "string",
+											"format": "date-time"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"4xx": {
+				"type": "object",
+				"properties": {
+					"error": {
+						"type": "string",
+						"default": "Bad Request"
+					},
+					"message": {
+						"type": "string",
+						"default": "Invalid input, auth, parameters etc."
+					},
+					"statusCode": {
+						"type": "integer",
+						"default": 400
+					}
+				}
+			},
+			"5xx": {
+				"type": "object",
+				"properties": {
+					"error": {
+						"type": "string",
+						"default": "Internal Server Error"
+					},
+					"message": {
+						"type": "string",
+						"default": "Something went wrong."
+					},
+					"statusCode": {
+						"type": "integer",
+						"default": 500
+					}
+				}
+			}
+		}
+	}
+}

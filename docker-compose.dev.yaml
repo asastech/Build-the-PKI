@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:13.3-alpine
+    command: postgres -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c random_page_cost=1.0
+    environment:
+      POSTGRES_USER: loki_service
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: loki
+      PGDATA: /var/lib/postgresql/data
+    tmpfs: /var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    expose:
+      - 5432
+    restart: unless-stopped
+  db-migrator:
+    image: ghcr.io/oofin-engineering/db-migrator:main
+    command: migrate -i -d loki
+    environment:
+      FLYWAY_URL: jdbc:postgresql://db:5432/loki
+      FLYWAY_USER: loki_service
+      FLYWAY_PASSWORD: password123
+    depends_on:
+      - db
+    links:
+      - db
+    restart: always
+  cache:
+    image: redis:6.2.4-alpine
+    ports:
+      - '6379:6379'
+    restart: unless-stopped

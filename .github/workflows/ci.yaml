@@ -1,0 +1,70 @@
+name: 'CI'
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+    branches:
+      - main
+      - staging
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+      fail-fast: true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Docker Login
+        run: echo $GHCR_PAT | docker login ghcr.io -u phr3nzy --password-stdin
+        env:
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
+      - name: Start containers
+        run: docker-compose -f "docker-compose.ci.yaml" up -d --build
+      - name: Setup vault
+        run:
+          wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg >/dev/null
+          \ && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          \ && sudo apt update && sudo apt install vault
+      - name: Run vault
+        run: vault server -dev -dev-root-token-id super-secret-vault-token &
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2.2.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Lint
+        run: yarn lint
+      - name: Build
+        run: yarn build
+      - name: Run tests
+        run: yarn test:ci
+        env:
+          SERVICE_NAME: 'loki-testing'
+          NODE_ENV: 'testing'
+          APP_ENV: 'testing'
+          LOG_LEVEL: 'info'
+          DISABLE_LOGGING: 'false'
+          HOST: '0.0.0.0'
+          PORT: 3000
+          DATABASE_URL: 'postgres://loki_service:password123@localhost:5432/loki'
+          REDIS_URL: 'redis://localhost:6379/'
+          VAULT_ADDR: 'http://localhost:8200'
+          VAULT_TOKEN: 'super-secret-vault-token'
+          PKI_MOUNT_NAME: 'testing-pki-mount-name'
+          PKI_ROLE_NAME: 'testing-role-name'
+          PKI_ISSUER_REF: 'ofin-dev'
+          PKI_CERT_EXPIRATION: '876600h'
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.ci.yaml" down
+  build_image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Build and tag image'
+        run: docker build . -t loki-api:latest

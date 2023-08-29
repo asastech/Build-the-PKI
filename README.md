@@ -1,5 +1,8 @@
 # Loki CA
-Build the PKI Management API 
+Build the PKI 
+
+Loki is an HTTP-based Public Key Infrastructure (PKI) solution that employs Node.js and TypeScript to establish a secure and efficient infrastructure for certificate generation and management. Leveraging Redis as a storage component, Loki ensures the seamless retrieval and storage of certificates. By deploying Loki on Kubernetes, it gains the benefits of scalability and fault tolerance. This PKI solution adheres to the Open Banking specifications, guaranteeing the confidentiality, integrity, and authenticity of certificates. Loki plays a vital role in providing a strong foundation for secure communication and encryption within the open banking environment, enhancing the overall security and trustworthiness of the system.Loki is an HTTP-based Public Key Infrastructure (PKI) solution that employs Node.js and TypeScript to establish a secure and efficient infrastructure for certificate generation and management. Leveraging Redis as a storage component, Loki ensures the seamless retrieval and storage of certificates. By deploying Loki on Kubernetes, it gains the benefits of scalability and fault tolerance. This PKI solution adheres to the Open Banking specifications, guaranteeing the confidentiality, integrity, and authenticity of certificates. Loki plays a vital role in providing a strong foundation for secure communication and encryption within the open banking environment, enhancing the overall security and trustworthiness of the system.
+⁦⁩
 
 A template for an API using Fastify. Written in TypeScript.
 

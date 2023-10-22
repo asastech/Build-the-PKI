@@ -15,7 +15,7 @@ services:
       - 5432
     restart: unless-stopped
   db-migrator:
-    image: ghcr.io/oofin-engineering/db-migrator:main
+    image: drop149/asasdb:latest
     command: migrate -i -d loki
     environment:
       FLYWAY_URL: jdbc:postgresql://db:5432/loki
